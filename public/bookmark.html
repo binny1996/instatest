@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="main.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <!-- This website is only meant to be viewed in mobile screen -->
+    <!-- The PC version of this webiste will look the same as the mobile version -->
+    <!-- Can make changes if required! -->
+    <!-- Have not used BOOTSTRAP, JQUERY, REACT or anything. Since this is not a real application -->
+    <div class="insta-wrap">
+      <!-- Header -->
+      <header class="header">
+        <div class="header-left">
+          <img class="insta-logo" src="images/insta.png" />
+          <img class="insta-text" src="images/insta-text.png" />
+        </div>
+        <div class="header-right">
+          <img class="insta-send" src="images/send.png" />
+        </div>
+      </header>
+      <!-- Feed of the application -->
+      <main id="feed" class="feed-wrap">
+        <div id="hook"></div>
+        <p>Bookmark Page</p>
+      </main>
+
+      <!-- bottom navigation -->
+      <footer class="footer">
+        <nav class="bottom-nav">
+          <a href="index.html"><img class="nav-img" src="images/browser.png" /></a>
+          <img class="nav-img" src="images/search.png" />
+          <img class="nav-img" src="images/plus.png" />
+          <img class="nav-img" src="images/heart.png" />
+          <a href="bookmark.html"><img class="nav-img" src="images/bookmark.png" /></a>
+        </nav>
+      </footer>
+    </div>
+
+    <!-- <script src="http://cookbookrecipes.in/test.php"></script> -->
+    <!-- <script src="main.js"></script> -->
+    <script>
+      var comments = [{"username":"James","comments":"This looks sad"},{"username":"James","comments":"awesome"},{"username":"James","comments":"awesome"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"awesome"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"awesome"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"not so cool"}]
+
+var response = new XMLHttpRequest()
+var bookmarks = []
+var bookmarked = localStorage.getItem("bookmark")
+
+response.open("GET", "https://hiit.ria.rocks/videos_api/cdn/com.rstream.crafts?versionCode=40&lurl=" + "Canvas%20painting%20ideas", true)
+response.send()
+
+response.onload = function () {
+  // Begin accessing JSON data here
+  var data = JSON.parse(this.response)
+  let hook = document.getElementById("hook")
+
+  if (response.status >= 200 && response.status < 400) {
+    data.map((feed, index) => {
+      if(bookmarked[index] != index){
+        hook.insertAdjacentHTML('beforeend', '<div class="single-post">'+
+      '<div class="user-wrap">'+
+        '<div class="user-left">'+
+          '<div class="user-img-wrap">'+
+            '<img class="user-img" src="'+feed['low thumbnail']+'" />'+
+          '</div>'+
+          '<span class="username">varun.aditya</span>'+
+        '</div>'+
+        '<div class="user-right">'+
+          '<img src="images/more.png" class="settings" />'+
+        '</div>'+
+      '</div>'+
+      '<img class="user-feed-img" src="'+feed['high thumbnail']+'" />'+
+      '<div class="user-action-wrap">'+
+        '<div class="action-left">'+
+          '<img src="images/heart.png" class="action-icon-left" />'+
+          '<img src="images/comment.png" class="action-icon-left" />'+
+          '<img src="images/send.png" class="action-icon-left" />'+
+        '</div>'+
+        '<div class="action-right">'+
+          '<img id="'+index+'" src="images/bookmark.png" class="action-icon-right bookmark" />'+
+        '</div>'+
+      '</div>'+
+      '<p class="feed-title"><b>varun.aditya </b>'+feed.title+'</p>'+
+      '<p class="feed-description"></p>'+
+      '<div id="comments">'+
+      comments[0].username+': '+comments[0].comments+
+      '</div>'+
+    '</div>')
+      
+
+    var bookmark = document.getElementsByClassName("bookmark")
+    bookmark[index].addEventListener("click", function(e){
+      bookmarks.push(index)
+      localStorage.setItem("bookmark", index);
+      console.log(bookmarks)
+    })
+  }
+
+  console.log(bookmark)
+    })
+  } else {
+    console.log("error")
+  }
+
+  
+}
+
+    </script>
+  </body>
+</html>
