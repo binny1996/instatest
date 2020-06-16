@@ -26,17 +26,17 @@
       <!-- Feed of the application -->
       <main id="feed" class="feed-wrap">
         <div id="hook"></div>
-        <p>Bookmark Page</p>
+        <!-- <p>Loading...</p> -->
       </main>
 
       <!-- bottom navigation -->
       <footer class="footer">
         <nav class="bottom-nav">
-          <a href="index.html"><img class="nav-img" src="images/browser.png" /></a>
+          <a href="index.html"><img class="nav-img" src="images/home.png" /></a>
           <img class="nav-img" src="images/search.png" />
           <img class="nav-img" src="images/plus.png" />
           <img class="nav-img" src="images/heart.png" />
-          <a href="bookmark.html"><img class="nav-img" src="images/bookmark.png" /></a>
+          <a href="bookmark.html"><img class="nav-img" src="images/bookmarked.png" /></a>
         </nav>
       </footer>
     </div>
@@ -46,68 +46,78 @@
     <script>
       var comments = [{"username":"James","comments":"This looks sad"},{"username":"James","comments":"awesome"},{"username":"James","comments":"awesome"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"awesome"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"This looks sad"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"awesome"},{"username":"James","comments":"not so cool"},{"username":"James","comments":"not so cool"}]
 
-var response = new XMLHttpRequest()
-var bookmarks = []
-var bookmarked = localStorage.getItem("bookmark")
+    var response = new XMLHttpRequest()
+    if(localStorage.getItem("bookmarked")){
+      var bookmarks = []
+      bookmarks = bookmarks.concat(JSON.parse(localStorage.getItem("bookmarked")))
+    }else{
+      var bookmarks = []
+    }
 
-response.open("GET", "https://hiit.ria.rocks/videos_api/cdn/com.rstream.crafts?versionCode=40&lurl=" + "Canvas%20painting%20ideas", true)
-response.send()
+    // var bookmarked = JSON.parse(localStorage.getItem("bookmark"))
 
-response.onload = function () {
-  // Begin accessing JSON data here
-  var data = JSON.parse(this.response)
-  let hook = document.getElementById("hook")
+    response.open("GET", "https://hiit.ria.rocks/videos_api/cdn/com.rstream.crafts?versionCode=40&lurl=" + "Canvas%20painting%20ideas", true)
+    response.send()
 
-  if (response.status >= 200 && response.status < 400) {
-    data.map((feed, index) => {
-      if(bookmarked[index] != index){
-        hook.insertAdjacentHTML('beforeend', '<div class="single-post">'+
-      '<div class="user-wrap">'+
-        '<div class="user-left">'+
-          '<div class="user-img-wrap">'+
-            '<img class="user-img" src="'+feed['low thumbnail']+'" />'+
-          '</div>'+
-          '<span class="username">varun.aditya</span>'+
-        '</div>'+
-        '<div class="user-right">'+
-          '<img src="images/more.png" class="settings" />'+
-        '</div>'+
-      '</div>'+
-      '<img class="user-feed-img" src="'+feed['high thumbnail']+'" />'+
-      '<div class="user-action-wrap">'+
-        '<div class="action-left">'+
-          '<img src="images/heart.png" class="action-icon-left" />'+
-          '<img src="images/comment.png" class="action-icon-left" />'+
-          '<img src="images/send.png" class="action-icon-left" />'+
-        '</div>'+
-        '<div class="action-right">'+
-          '<img id="'+index+'" src="images/bookmark.png" class="action-icon-right bookmark" />'+
-        '</div>'+
-      '</div>'+
-      '<p class="feed-title"><b>varun.aditya </b>'+feed.title+'</p>'+
-      '<p class="feed-description"></p>'+
-      '<div id="comments">'+
-      comments[0].username+': '+comments[0].comments+
-      '</div>'+
-    '</div>')
+    response.onload = function () {
+      // Begin accessing JSON data here
+      var data = JSON.parse(this.response)
+      let hook = document.getElementById("hook")
+
+      if (response.status >= 200 && response.status < 400) {
+        data.map((feed, index) => {
+          for(var i = 0; i< bookmarks.length;i++){
+              if(bookmarks[i] == index){
+              hook.insertAdjacentHTML('beforeend', '<div class="single-post">'+
+            '<div class="user-wrap">'+
+              '<div class="user-left">'+
+                '<div class="user-img-wrap">'+
+                  '<img class="user-img" src="'+feed['low thumbnail']+'" />'+
+                '</div>'+
+                '<span class="username">varun.aditya</span>'+
+              '</div>'+
+              '<div class="user-right">'+
+                '<img src="images/more.png" class="settings" />'+
+              '</div>'+
+            '</div>'+
+            '<img class="user-feed-img" src="'+feed['high thumbnail']+'" />'+
+            '<div class="user-action-wrap">'+
+              '<div class="action-left">'+
+                '<img src="images/heart.png" class="action-icon-left" />'+
+                '<img src="images/comment.png" class="action-icon-left" />'+
+                '<img src="images/send.png" class="action-icon-left" />'+
+              '</div>'+
+              '<div class="action-right">'+
+                '<img id="bookmark'+index+'" src="images/bookmarked.png" class="action-icon-right bookmark" />'+
+              '</div>'+
+            '</div>'+
+            '<p class="feed-title"><b>varun.aditya </b>'+feed.title+'</p>'+
+            '<p class="feed-description"></p>'+
+            '<div id="comments">'+
+            comments[0].username+': '+comments[0].comments+
+            '</div>'+
+          '</div>')
+
+          document.getElementById("bookmark"+index).addEventListener("click", (e)=>{
+            bookmarks.splice(bookmarks.indexOf(index), 1)
+            console.log(bookmarks.indexOf(index))
+            console.log(bookmarks)
+            localStorage.setItem("bookmarked", JSON.stringify(bookmarks))
+            document.getElementById("bookmark"+index).src="images/bookmark.png"
+          })
+
+        
+            }
+          }
+          
+        })
+      } else {
+        console.log("error")
+      }
+
       
+    }
 
-    var bookmark = document.getElementsByClassName("bookmark")
-    bookmark[index].addEventListener("click", function(e){
-      bookmarks.push(index)
-      localStorage.setItem("bookmark", index);
-      console.log(bookmarks)
-    })
-  }
-
-  console.log(bookmark)
-    })
-  } else {
-    console.log("error")
-  }
-
-  
-}
 
     </script>
   </body>

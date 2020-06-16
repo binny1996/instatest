@@ -125,6 +125,7 @@ body {
   bottom: 0px;
   left: 0px;
   right: 0px;
+  z-index: 3;
 }
 
 .bottom-nav {
@@ -146,4 +147,61 @@ body {
 .feed-description {
   font-size: 14px;
   margin: 0px;
+}
+
+#tooltip {
+  position: relative;
+}
+
+#tooltip::before {
+  content: "Click Below!";
+  display: block;
+  padding: 5px 10px;
+  font-size: 11px;
+  background-color: white;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 40px;
+  position: absolute;
+  top: -30px;
+  right: 3%;
+  animation: moving 1s ease-in-out infinite alternate;
+}
+
+/* #tooltip::after {
+  content: "";
+  display: block;
+  width: 0px;
+  height: 0px;
+  border: 8px solid transparent;
+  border-top-color: white;
+  position: absolute;
+  top: -9px;
+  right: 41px;
+} */
+
+@keyframes moving{
+  from{
+    transform: translateY(0px);
+  }to{
+    transform: translateY(5px);
+  }
+}
+
+@media only screen and (max-width: 576px) {
+  .insta-wrap {
+    width:100%;
+  }
+
+  .header {
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+  }
+  .footer {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+  }
 }
